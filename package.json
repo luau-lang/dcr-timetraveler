@@ -2,7 +2,10 @@
   "name": "luau-dcr-timetraveler",
   "version": "1.0.0",
   "description": "",
+  "source": "src/index.html",
   "scripts": {
+    "start": "parcel",
+    "build": "parcel build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
