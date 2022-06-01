@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { Alert, Button, ButtonGroup, InputGroup, Table } from "react-bootstrap";
+import { Alert, Button, ButtonGroup, Container, InputGroup, Row } from "react-bootstrap";
 import { ScopeView } from "./ScopeView";
 
 export function Visualizer(props) {
     const usable = props.data !== null;
     const [index, setIndex] = useState(0);
     const currentData = props.data ? props.data[index] : null;
-    console.log(currentData);
 
     useEffect(() => {
         if (currentData === null)
@@ -30,15 +29,41 @@ export function Visualizer(props) {
         setIndex((prevCount) => Math.min(props.data.length - 1, prevCount + 1));
     }
 
+    let current = null;
+    if (currentData.type == "step") {
+        current = <>
+            <p>Currently dispatching:</p>
+            <pre>{currentData.current}</pre>
+        </>
+    } else if (currentData.type == "boundary") {
+        if (index == 0) {
+            current = <p>Currently inspecting the initial state.</p>
+        } else {
+            current = <p>Currently inspecting the final state.</p>
+        }
+    }
+
     return <>
-        <ScopeView scope={currentData.rootScope} />
-        <p>Current: {currentData.current}</p>
-        <div id="graphroot">
-        </div>
-        <ButtonGroup>
-            <Button disabled={!usable} variant="primary" onClick={decrementIndex}>Go back</Button>
-            <InputGroup.Text>{index}</InputGroup.Text>
-            <Button disabled={!usable} variant="primary" onClick={incrementIndex}>Go forward</Button>
-        </ButtonGroup>
+        <Container>
+            <Row>
+                <ButtonGroup>
+                    <Button disabled={!usable} variant="primary" onClick={decrementIndex}>Go back</Button>
+                    <InputGroup.Text>{index}</InputGroup.Text>
+                    <Button disabled={!usable} variant="primary" onClick={incrementIndex}>Go forward</Button>
+                </ButtonGroup>
+            </Row>
+            <Row>
+                {current}
+            </Row>
+            <Row>
+                <h2>Current scope tree</h2>
+                <ScopeView scope={currentData.rootScope} />
+            </Row>
+            <Row>
+                <h2>Constraint graph</h2>
+                <div id="graphroot">
+                </div>
+            </Row>
+        </Container>
     </>
 }
