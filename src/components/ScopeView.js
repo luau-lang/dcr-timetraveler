@@ -1,4 +1,4 @@
-import { useState } from "react";
+import Accordion from "react-bootstrap/Accordion";
 
 export function ScopeView({ scope }) {
     let bindings = null;
@@ -7,16 +7,33 @@ export function ScopeView({ scope }) {
 
         for (const bindingName in scope.bindings) {
             bindingItems.push(<li key={bindingName}>
-                <pre>{bindingName} : {scope.bindings[bindingName]}</pre>
+                <pre>{bindingName} : {scope.bindings[bindingName].typeString}</pre>
             </li>)
         }
 
-        bindings = <div>
-            <p>Bindings:</p>
-            <ul>
-                {bindingItems}
-            </ul>
-        </div>
+        let typeBindings = [];
+        let typePackBindings = [];
+
+        for (const bindingName in scope.typeBindings) {
+            typeBindings.push(<li key={bindingName}>
+                <pre>{bindingName} : {scope.typeBindings[bindingName].typeString}</pre>
+            </li>)
+        }
+
+        for (const bindingName in scope.typePackBindings) {
+            typePackBindings.push(<li key={bindingName}>
+                <pre>{bindingName} : {scope.typePackBindings[bindingName].typeString}</pre>
+            </li>)
+        }
+
+        bindings = <Accordion.Item eventKey="0">
+            <Accordion.Header>
+                Bindings
+            </Accordion.Header>
+            <Accordion.Body>
+                <ul>{bindingItems}</ul>
+            </Accordion.Body>
+        </Accordion.Item>
     }
 
     let childScopes = null;
@@ -27,16 +44,18 @@ export function ScopeView({ scope }) {
             scopeItems.push(<li key={childScope}><ScopeView scope={scope.children[childScope]} /></li>)
         }
 
-        childScopes = <div>
-            <p>Child scopes:</p>
-            <ul>
-                {scopeItems}
-            </ul>
-        </div>
+        childScopes = <Accordion.Item eventKey="1">
+            <Accordion.Header>
+                Child scopes
+            </Accordion.Header>
+            <Accordion.Body>
+                <ul>{scopeItems}</ul>
+            </Accordion.Body>
+        </Accordion.Item>
     }
 
-    return <div>
+    return <Accordion alwaysOpen>
         {bindings}
         {childScopes}
-    </div>
+    </Accordion>
 }
