@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { monaco } from "react-monaco-editor";
 import MonacoEditor from "react-monaco-editor/lib/editor";
+import { language } from "../LuauMonarch";
+
+monaco.languages.register({
+    id: "luau",
+    aliases: ["Luau", "luau"],
+});
+
+monaco.languages.setMonarchTokensProvider("luau", language);
 
 export function SourceCodeView({ markers, source }) {
     const [editor, setEditor] = useState(null);
@@ -17,7 +25,7 @@ export function SourceCodeView({ markers, source }) {
     return (
         <MonacoEditor
             height="400"
-            language="lua"
+            language="luau"
             value={source}
             options={{
                 readOnly: true,
