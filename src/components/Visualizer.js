@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Alert, Button, ButtonGroup, Container, InputGroup, Row } from "react-bootstrap";
+import { ConstraintList } from "./ConstraintList";
 import { ScopeView } from "./ScopeView";
+import { SourceCodeView } from "./SourceCodeView";
 
 export function Visualizer(props) {
     const usable = props.data !== null;
     const [index, setIndex] = useState(0);
+    const [lastIndex, setLastIndex] = useState(null);
 
     if (!usable) {
         return <Alert variant="danger">You must supply input before this tab is usable.</Alert>
@@ -20,22 +23,25 @@ export function Visualizer(props) {
         currentData = props.data.solve.finalState;
     else
         currentData = props.data.solve.stepStates[index];
+    
+    const updateIndex = (mapper) => {
+        setLastIndex(index);
+        setIndex((prevIndex) => Math.max(0, Math.min(maxIndex, mapper(prevIndex))));
+    };
 
-    const decrementIndex = () => {
-        setIndex((prevCount) => Math.max(0, prevCount - 1));
-    }
+    const decrementIndex = () => updateIndex((prevIndex) => prevIndex - 1);
+    const incrementIndex = () => updateIndex((prevIndex) => prevIndex + 1);
+    const goToInitial = () => updateIndex(() => 0);
+    const goToFinal = () => updateIndex(() => maxIndex);
 
-    const incrementIndex = () => {
-        setIndex((prevCount) => Math.min(maxIndex, prevCount + 1));
-    }
-
-    const goToInitial = () => {
-        setIndex(0);
-    }
-
-    const goToFinal = () => {
-        setIndex(maxIndex);
-    }
+    const currentConstraints = (index == 0 || index == maxIndex) ? currentData.constraints : currentData.unsolvedConstraints;
+    let lastConstraints = null;
+    if (lastIndex === 0)
+        lastConstraints = props.data.solve.initialState.constraints;
+    else if (lastIndex === maxIndex)
+        lastConstraints = props.data.solve.finalState.constraints;
+    else if (lastIndex !== null)
+        lastConstraints = props.data.solve.stepStates[lastIndex].unsolvedConstraints;
 
     let current = null;
     if (index > 0 && index < maxIndex) {
@@ -52,21 +58,7 @@ export function Visualizer(props) {
         }
     }
 
-    let currentConstraints = [];
-
-    if (boundary) {
-        for (const id in currentData.constraints) {
-            const stringified = currentData.constraints[id];
-            currentConstraints.push(<li key={id}><pre>{stringified}</pre></li>);
-        }
-    } else {
-        for (const id in currentData.unsolvedConstraints) {
-            const stringified = currentData.unsolvedConstraints[id];
-            currentConstraints.push(<li key={id}><pre>{stringified}</pre></li>);
-        }
-    }
-
-    let constraintsDisplay = <ul>{currentConstraints}</ul>;
+    let constraintsDisplay = <ConstraintList constraints={currentConstraints} previousConstraints={lastConstraints} />;
     if (currentConstraints.length == 0) {
         constraintsDisplay = <p>No constraints remain to be solved.</p>
     }
@@ -91,6 +83,10 @@ export function Visualizer(props) {
             </Row>
             <Row>
                 {current}
+            </Row>
+            <Row>
+                <h2>Source code</h2>
+                <SourceCodeView source={props.data.generation.source} />
             </Row>
             <Row>
                 <h2>Unsolved constraints</h2>
