@@ -13,10 +13,8 @@ export function Visualizer(props) {
         return <Alert variant="danger">You must supply input before this tab is usable.</Alert>
     }
 
-    let currentData = null;
     const maxIndex = props.data.solve.stepStates.length;
-    const boundary = index == 0 || index == maxIndex;
-
+    let currentData = null;
     if (index == 0)
         currentData = props.data.solve.initialState;
     else if (index == maxIndex)
