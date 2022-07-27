@@ -44,8 +44,9 @@ export function Visualizer(props) {
     let current = null;
     if (index > 0 && index < maxIndex) {
         const constraintString = currentData.unsolvedConstraints[currentData.currentConstraint].stringification;
+        const header = currentData.force ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
         current = <>
-            <p>Currently dispatching:</p>
+            {header}
             <pre>{constraintString}</pre>
         </>
     } else {

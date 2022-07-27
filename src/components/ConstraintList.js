@@ -6,10 +6,10 @@ export function ConstraintList({ constraints, previousConstraints }) {
 
     for (const constraintId in constraints) {
         let currentValue = constraints[constraintId];
-        let previousValue = previousConstraints !== null ? previousConstraints[constraintId] : null;
+        let previousValue = previousConstraints ? previousConstraints[constraintId] : null;
 
         const currentString = currentValue.stringification;
-        const previousString = previousValue !== null ? previousValue.stringification : null;
+        const previousString = previousValue ? previousValue.stringification : null;
 
         let blocked = [];
         for (const block of currentValue.blocks) {
