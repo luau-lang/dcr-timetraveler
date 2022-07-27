@@ -68,7 +68,7 @@ export function Visualizer(props) {
         displayedIndex = "Final";
     }
 
-    return <>
+    return (
         <Container>
             <Row>
                 <ButtonGroup>
@@ -95,5 +95,5 @@ export function Visualizer(props) {
                 <ScopeView scope={currentData.rootScope} />
             </Row>
         </Container>
-    </>
+    );
 }
