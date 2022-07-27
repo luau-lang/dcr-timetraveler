@@ -8,7 +8,7 @@ export function ConstraintList({ constraints, previousConstraints }) {
         let currentValue = constraints[constraintId];
         let previousValue = previousConstraints !== null ? previousConstraints[constraintId] : null;
 
-        if (currentValue == previousValue) {
+        if (currentValue == previousValue || previousValue === null) {
             listItems.push(<li key={constraintId}><pre>{currentValue}</pre></li>);
         } else if (previousValue !== null) {
             listItems.push(<li key={constraintId}><pre className="changed">{currentValue}</pre></li>);
