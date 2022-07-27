@@ -43,7 +43,7 @@ export function Visualizer(props) {
 
     let current = null;
     if (index > 0 && index < maxIndex) {
-        const constraintString = currentData.unsolvedConstraints[currentData.currentConstraint];
+        const constraintString = currentData.unsolvedConstraints[currentData.currentConstraint].stringification;
         current = <>
             <p>Currently dispatching:</p>
             <pre>{constraintString}</pre>

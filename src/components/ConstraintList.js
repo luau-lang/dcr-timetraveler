@@ -8,10 +8,20 @@ export function ConstraintList({ constraints, previousConstraints }) {
         let currentValue = constraints[constraintId];
         let previousValue = previousConstraints !== null ? previousConstraints[constraintId] : null;
 
-        if (currentValue == previousValue || previousValue === null) {
-            listItems.push(<li key={constraintId}><pre>{currentValue}</pre></li>);
-        } else if (previousValue !== null) {
-            listItems.push(<li key={constraintId}><pre className="changed">{currentValue}</pre></li>);
+        const currentString = currentValue.stringification;
+        const previousString = previousValue !== null ? previousValue.stringification : null;
+
+        let blocked = [];
+        for (const block of currentValue.blocks) {
+            blocked.push(<li>({block.kind})<pre>{block.stringification}</pre></li>);
+        }
+
+        let blockedList = blocked.length > 0 ? <div><p>Blocked on:<ul>{blocked}</ul></p></div> : null;
+
+        if (currentString == previousString || previousString === null) {
+            listItems.push(<li key={constraintId}><pre>{currentString}</pre>{blockedList}</li>);
+        } else if (previousString !== null) {
+            listItems.push(<li key={constraintId}><pre className="changed">{currentString}</pre>{blockedList}</li>);
         }
     }
 
