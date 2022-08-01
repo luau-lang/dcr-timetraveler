@@ -13,7 +13,7 @@ export function ConstraintList({ constraints, previousConstraints }) {
 
         let blocked = [];
         for (const block of currentValue.blocks) {
-            blocked.push(<li>({block.kind})<pre>{block.stringification}</pre></li>);
+            blocked.push(<li key={block.stringification}>({block.kind})<pre>{block.stringification}</pre></li>);
         }
 
         let blockedList = blocked.length > 0 ? <div><p>Blocked on:<ul>{blocked}</ul></p></div> : null;
