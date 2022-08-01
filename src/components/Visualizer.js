@@ -104,11 +104,11 @@ export function Visualizer(props) {
                 </ButtonGroup>
             </Row>
             <Row>
-                {current}
-            </Row>
-            <Row>
                 <h2>Source code</h2>
                 <SourceCodeView markers={markers} source={props.data.generation.source} />
+            </Row>
+            <Row>
+                {current}
             </Row>
             <Row>
                 <h2>Unsolved constraints</h2>
