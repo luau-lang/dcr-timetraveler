@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Alert, Button, ButtonGroup, Container, InputGroup, Row } from "react-bootstrap";
+import { monaco } from "react-monaco-editor";
 import { ConstraintList } from "./ConstraintList";
 import { ScopeView } from "./ScopeView";
 import { SourceCodeView } from "./SourceCodeView";
@@ -69,6 +70,28 @@ export function Visualizer(props) {
         displayedIndex = "Final";
     }
 
+    let markers = [];
+    for (const e of props.data.generation.errors) {
+        markers.push({
+            message: e.message,
+            startLineNumber: e.location.beginLine,
+            startColumn: e.location.beginColumn,
+            endLineNumber: e.location.endLine,
+            endColumn: e.location.endColumn,
+        });
+    }
+
+    for (const e of props.data.check.errors) {
+        markers.push({
+            message: e.message,
+            severity: monaco.MarkerSeverity.Error,
+            startLineNumber: e.location.beginLine + 1,
+            startColumn: e.location.beginColumn + 1,
+            endLineNumber: e.location.endLine + 1,
+            endColumn: e.location.endColumn + 1,
+        });
+    }
+
     return (
         <Container>
             <Row>
@@ -85,7 +108,7 @@ export function Visualizer(props) {
             </Row>
             <Row>
                 <h2>Source code</h2>
-                <SourceCodeView source={props.data.generation.source} />
+                <SourceCodeView markers={markers} source={props.data.generation.source} />
             </Row>
             <Row>
                 <h2>Unsolved constraints</h2>
