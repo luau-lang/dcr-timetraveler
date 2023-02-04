@@ -22,7 +22,7 @@ export function Visualizer(props) {
         currentData = props.data.solve.finalState;
     else
         currentData = props.data.solve.stepStates[index];
-    
+
     const updateIndex = (mapper) => {
         setLastIndex(index);
         setIndex((prevIndex) => Math.max(0, Math.min(maxIndex, mapper(prevIndex))));
@@ -43,8 +43,9 @@ export function Visualizer(props) {
         lastConstraints = props.data.solve.stepStates[lastIndex].unsolvedConstraints;
 
     let current = null;
+    let constraintString = null;
     if (index > 0 && index < maxIndex) {
-        const constraintString = currentData.unsolvedConstraints[currentData.currentConstraint].stringification;
+        constraintString = currentData.unsolvedConstraints[currentData.currentConstraint].stringification;
         const header = currentData.force ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
         current = <>
             {header}
@@ -89,6 +90,18 @@ export function Visualizer(props) {
             startColumn: e.location.beginColumn + 1,
             endLineNumber: e.location.endLine + 1,
             endColumn: e.location.endColumn + 1,
+        });
+    }
+
+    if (constraintString !== null) {
+        const {currentConstraintLocation} = currentData;
+        markers.push({
+            message: constraintString,
+            severity: monaco.MarkerSeverity.Info,
+            startLineNumber: currentConstraintLocation.beginLine + 1,
+            startColumn: currentConstraintLocation.beginColumn + 1,
+            endLineNumber: currentConstraintLocation.endLine + 1,
+            endColumn: currentConstraintLocation.endColumn + 1,
         });
     }
 
