@@ -42,20 +42,20 @@ export function Visualizer(props) {
     else if (lastIndex !== null)
         lastConstraints = props.data.solve.stepStates[lastIndex].unsolvedConstraints;
 
-    let current = null;
-    let constraintString = null;
+    let currentConstraint = null;
+    let currentConstraintDisplay = null;
     if (index > 0 && index < maxIndex) {
-        constraintString = currentData.unsolvedConstraints[currentData.currentConstraint].stringification;
+        currentConstraint = currentData.unsolvedConstraints[currentData.currentConstraint];
         const header = currentData.force ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
-        current = <>
+        currentConstraintDisplay = <>
             {header}
-            <pre>{constraintString}</pre>
+            <pre>{currentConstraint.stringification}</pre>
         </>
     } else {
         if (index == 0) {
-            current = <p>Currently inspecting the initial state.</p>
+            currentConstraintDisplay = <p>Currently inspecting the initial state.</p>
         } else {
-            current = <p>Currently inspecting the final state.</p>
+            currentConstraintDisplay = <p>Currently inspecting the final state.</p>
         }
     }
 
@@ -93,15 +93,15 @@ export function Visualizer(props) {
         });
     }
 
-    if (constraintString !== null) {
-        const {currentConstraintLocation} = currentData;
+    if (currentConstraint !== null) {
+        const {stringification, location} = currentConstraint;
         markers.push({
-            message: constraintString,
+            message: stringification,
             severity: monaco.MarkerSeverity.Info,
-            startLineNumber: currentConstraintLocation.beginLine + 1,
-            startColumn: currentConstraintLocation.beginColumn + 1,
-            endLineNumber: currentConstraintLocation.endLine + 1,
-            endColumn: currentConstraintLocation.endColumn + 1,
+            startLineNumber: location.beginLine + 1,
+            startColumn: location.beginColumn + 1,
+            endLineNumber: location.endLine + 1,
+            endColumn: location.endColumn + 1,
         });
     }
 
@@ -121,7 +121,7 @@ export function Visualizer(props) {
                 <SourceCodeView markers={markers} source={props.data.generation.source} />
             </Row>
             <Row>
-                {current}
+                {currentConstraintDisplay}
             </Row>
             <Row>
                 <h2>Unsolved constraints</h2>
