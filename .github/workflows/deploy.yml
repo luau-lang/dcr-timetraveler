@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm install --locked
-      - run: parcel build --public-url .
+      - run: npx parcel build --public-url .
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
