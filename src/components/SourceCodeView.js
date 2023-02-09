@@ -72,8 +72,6 @@ export function SourceCodeView({ markers, source, typeLocations, typeStrings, pr
 
             if (different) {
                 deltaDecorations.push({
-                    // Add an extra column to encompass the inlay hint. This is
-                    // kinda hacky, but it does work.
                     range: new monaco.Range(location[0] + 1, location[1] + 1, location[2] + 1, location[3] + 1),
                     options: {
                         className: "changedWithStepDecoration",

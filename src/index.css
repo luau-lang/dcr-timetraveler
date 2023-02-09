@@ -10,10 +10,10 @@
 
 @keyframes step-changed {
     from {
-        background-color: rgba(0, 0, 255, 25%);
+        background-color: rgba(0, 255, 0, 25%);
     }
 
     to {
-        background-color: rgba(0, 0, 255, 0%);
+        background-color: rgba(0, 255, 0, 0%);
     }
 }
