@@ -46,7 +46,7 @@ export function Visualizer(props) {
     let currentConstraintDisplay = null;
     if (index > 0 && index < maxIndex) {
         currentConstraint = currentData.unsolvedConstraints[currentData.currentConstraint];
-        const header = currentData.force ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
+        const header = currentData.forced ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
         currentConstraintDisplay = <>
             {header}
             <pre>{currentConstraint.stringification}</pre>
