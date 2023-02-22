@@ -2,3 +2,18 @@
     font-weight: bold;
     color: #00AA00;
 }
+
+.changedWithStepDecoration {
+    animation: step-changed 2s 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes step-changed {
+    from {
+        background-color: rgba(0, 255, 0, 25%);
+    }
+
+    to {
+        background-color: rgba(0, 255, 0, 0%);
+    }
+}

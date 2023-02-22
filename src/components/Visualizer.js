@@ -14,14 +14,22 @@ export function Visualizer(props) {
         return <Alert variant="danger">You must supply input before this tab is usable.</Alert>
     }
 
-    const maxIndex = props.data.solve.stepStates.length;
+    const maxIndex = props.data.solve.stepStates.length + 1;
     let currentData = null;
     if (index == 0)
         currentData = props.data.solve.initialState;
     else if (index == maxIndex)
         currentData = props.data.solve.finalState;
     else
-        currentData = props.data.solve.stepStates[index];
+        currentData = props.data.solve.stepStates[index - 1];
+
+    let lastData = null;
+    if (lastIndex == 0)
+        lastData = props.data.solve.initialState;
+    else if (lastIndex == maxIndex)
+        lastData = props.data.solve.finalState;
+    else if (lastIndex !== null)
+        lastData = props.data.solve.stepStates[lastIndex - 1];
 
     const updateIndex = (mapper) => {
         setLastIndex(index);
@@ -33,14 +41,8 @@ export function Visualizer(props) {
     const goToInitial = () => updateIndex(() => 0);
     const goToFinal = () => updateIndex(() => maxIndex);
 
-    const currentConstraints = (index == 0 || index == maxIndex) ? currentData.constraints : currentData.unsolvedConstraints;
-    let lastConstraints = null;
-    if (lastIndex === 0)
-        lastConstraints = props.data.solve.initialState.constraints;
-    else if (lastIndex === maxIndex)
-        lastConstraints = props.data.solve.finalState.constraints;
-    else if (lastIndex !== null)
-        lastConstraints = props.data.solve.stepStates[lastIndex].unsolvedConstraints;
+    const currentConstraints = currentData.unsolvedConstraints;
+    let lastConstraints = lastData ? lastData.unsolvedConstraints : null;
 
     let currentConstraint = null;
     let currentConstraintDisplay = null;
@@ -75,10 +77,10 @@ export function Visualizer(props) {
     for (const e of props.data.generation.errors) {
         markers.push({
             message: e.message,
-            startLineNumber: e.location.beginLine,
-            startColumn: e.location.beginColumn,
-            endLineNumber: e.location.endLine,
-            endColumn: e.location.endColumn,
+            startLineNumber: e.location[0] + 1,
+            startColumn: e.location[1] + 1,
+            endLineNumber: e.location[2] + 1,
+            endColumn: e.location[3] + 1,
         });
     }
 
@@ -86,10 +88,10 @@ export function Visualizer(props) {
         markers.push({
             message: e.message,
             severity: monaco.MarkerSeverity.Error,
-            startLineNumber: e.location.beginLine + 1,
-            startColumn: e.location.beginColumn + 1,
-            endLineNumber: e.location.endLine + 1,
-            endColumn: e.location.endColumn + 1,
+            startLineNumber: e.location[0] + 1,
+            startColumn: e.location[1] + 1,
+            endLineNumber: e.location[2] + 1,
+            endColumn: e.location[3] + 1,
         });
     }
 
@@ -98,10 +100,10 @@ export function Visualizer(props) {
         markers.push({
             message: stringification,
             severity: monaco.MarkerSeverity.Info,
-            startLineNumber: location.beginLine + 1,
-            startColumn: location.beginColumn + 1,
-            endLineNumber: location.endLine + 1,
-            endColumn: location.endColumn + 1,
+            startLineNumber: location[0] + 1,
+            startColumn: location[1] + 1,
+            endLineNumber: location[2] + 1,
+            endColumn: location[3] + 1,
         });
     }
 
@@ -118,7 +120,7 @@ export function Visualizer(props) {
             </Row>
             <Row>
                 <h2>Source code</h2>
-                <SourceCodeView markers={markers} source={props.data.generation.source} />
+                <SourceCodeView markers={markers} source={props.data.generation.source} typeLocations={props.data.generation.exprTypeLocations} typeStrings={currentData.typeStrings} previousTypeStrings={lastData?.typeStrings} />
             </Row>
             <Row>
                 {currentConstraintDisplay}
