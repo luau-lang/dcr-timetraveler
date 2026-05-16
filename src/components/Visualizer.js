@@ -47,12 +47,19 @@ export function Visualizer(props) {
     let currentConstraint = null;
     let currentConstraintDisplay = null;
     if (index > 0 && index < maxIndex) {
-        currentConstraint = currentData.unsolvedConstraints[currentData.currentConstraint];
-        const header = currentData.forced ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
-        currentConstraintDisplay = <>
-            {header}
-            <pre>{currentConstraint.stringification}</pre>
-        </>
+        if ("constraint" == currentData.type) {
+            currentConstraint = currentData.unsolvedConstraints[currentData.currentConstraint];
+            const header = currentData.forced ? <p>Currently <strong>force</strong> dispatching:</p> : <p>Currently dispatching:</p>
+            currentConstraintDisplay = <>
+                {header}
+                <pre>{currentConstraint.stringification}</pre>
+            </>;
+        } else if ("generalize" == currentData.type)
+        {
+            currentConstraintDisplay = <>
+                <p>Generalizing <tt>{currentData.before}</tt> to <tt>{currentData.after}</tt></p>
+            </>;
+        }
     } else {
         if (index == 0) {
             currentConstraintDisplay = <p>Currently inspecting the initial state.</p>

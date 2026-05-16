@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { monaco } from "react-monaco-editor";
-import MonacoEditor from "react-monaco-editor";
+import Editor from "@monaco-editor/react";
 import { language } from "../LuauMonarch";
 import { EventEmitter } from "events";
-
-monaco.languages.register({
-    id: "luau",
-    aliases: ["Luau", "luau"],
-});
 
 class TypeInlayHintsProvider {
     constructor() {
@@ -34,11 +28,20 @@ class TypeInlayHintsProvider {
 
 const hintsProvider = new TypeInlayHintsProvider();
 
-monaco.languages.setMonarchTokensProvider("luau", language);
-monaco.languages.registerInlayHintsProvider("luau", hintsProvider);
-
 export function SourceCodeView({ markers, source, typeLocations, typeStrings, previousTypeStrings }) {
     const [editor, setEditor] = useState(null);
+
+    function editorWillMount(ed) {
+        setEditor(ed);
+
+        monaco.languages.register({
+            id: "luau",
+            aliases: ["Luau", "luau"],
+        });
+
+        monaco.languages.setMonarchTokensProvider("luau", language);
+        monaco.languages.registerInlayHintsProvider("luau", hintsProvider);
+    }
 
     const updateMarkers = useCallback(() => {
         if (editor === null) {
@@ -50,6 +53,7 @@ export function SourceCodeView({ markers, source, typeLocations, typeStrings, pr
     }, [editor, markers]);
 
     useEffect(updateMarkers, [editor, markers]);
+
     useEffect(() => {
         let hints = [];
         let deltaDecorations = [];
@@ -86,19 +90,33 @@ export function SourceCodeView({ markers, source, typeLocations, typeStrings, pr
             editor.deltaDecorations([], deltaDecorations);
     }, [typeLocations, typeStrings, previousTypeStrings, editor]);
 
-    return (
-        <MonacoEditor
-            height="400"
-            language="luau"
-            value={source}
-            options={{
-                scrollBeyondLastLine: false,
-                scrollBeyondLastColumn: false,
-                minimap: {
-                    enabled: false,
-                }
-            }}
-            editorDidMount={setEditor}
-        />
-    )
+    return <Editor
+        height="500px"
+        language="luau"
+        value={source}
+        onMount={editorWillMount}
+        options={{
+            scrollBeyondLastLine: false,
+            scrollBeyondLastColumn: false,
+            minimap: {
+                enabled: false,
+            }
+        }}
+        />;
+
+    // return (
+    //     <Editor
+    //         height="400"
+    //         language="luau"
+    //         value={source}
+    //         options={{
+    //             scrollBeyondLastLine: false,
+    //             scrollBeyondLastColumn: false,
+    //             minimap: {
+    //                 enabled: false,
+    //             }
+    //         }}
+    //         onMount={editorWillMount}
+    //     />
+    // );
 }
