@@ -16,7 +16,7 @@ export function ConstraintList({ constraints, previousConstraints }) {
             blocked.push(<li key={block.stringification}>({block.kind})<pre>{block.stringification}</pre></li>);
         }
 
-        let blockedList = blocked.length > 0 ? <div><p>Blocked on:<ul>{blocked}</ul></p></div> : null;
+        let blockedList = blocked.length > 0 ? <div><p>Blocked on:</p><ul>{blocked}</ul></div> : null;
 
         if (currentString == previousString || previousString === null) {
             listItems.push(<li key={constraintId}><pre>{currentString}</pre>{blockedList}</li>);
