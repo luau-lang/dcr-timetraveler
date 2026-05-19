@@ -103,20 +103,4 @@ export function SourceCodeView({ markers, source, typeLocations, typeStrings, pr
             }
         }}
         />;
-
-    // return (
-    //     <Editor
-    //         height="400"
-    //         language="luau"
-    //         value={source}
-    //         options={{
-    //             scrollBeyondLastLine: false,
-    //             scrollBeyondLastColumn: false,
-    //             minimap: {
-    //                 enabled: false,
-    //             }
-    //         }}
-    //         onMount={editorWillMount}
-    //     />
-    // );
 }
