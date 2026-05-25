@@ -21,7 +21,6 @@
     "events": "^3.3.0",
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",
-    "react-dom": "^18.1.0",
-    "react-monaco-editor": "^0.49.0"
+    "react-dom": "^18.1.0"
   }
 }

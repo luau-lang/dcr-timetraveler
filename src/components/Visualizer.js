@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Alert, Button, ButtonGroup, Container, InputGroup, Row } from "react-bootstrap";
-import { monaco } from "react-monaco-editor";
 import { ConstraintList } from "./ConstraintList";
 import { ScopeView } from "./ScopeView";
 import { SourceCodeView } from "./SourceCodeView";
